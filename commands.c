@@ -1,4 +1,9 @@
-//read memory command
+//read from memory command
+/*
+Name: read_mem <virtual address in hex>
+Description: read 1 byte from the memory at the given < virtual address> and print the corresponding
+physical address
+*/
 int command_readmem(int number_of_arguments, char **arguments)
 {
 	unsigned int address = strtol(arguments[1], NULL, 16);
@@ -6,5 +11,63 @@ int command_readmem(int number_of_arguments, char **arguments)
 
 	cprintf("value at address %x = %c\n", ptr, *ptr);
 
+	return 0;
+}
+/*
+Name: write_mem <character> <physical address in hex>
+Description: writes the given <character> in the memory at the given <physical address>
+*/
+//write to memory command 
+int command_writemem(int number_of_arguments, char **arguments)
+{
+	unsigned int address = strtol(arguments[1], NULL, 16);
+	unsigned char *ptr = (unsigned char *)(address) ;
+
+	*ptr = arguments[2][0];
+
+	return 0;
+}
+//writeable bit (read / read - write)
+/*
+Name: sp <virtual address> <r/w>
+Arguments: 
+<virtual address>: virtual memory address to set its page permissions.
+<r/w>: 'r' for read-only permission, 'w' for read/write permission.
+Description: This command should set the desired permission to a given virtual address page
+*/
+int command_set_permission(int number_of_arguments, char **arguments)
+{   int va = strtol(arguments[1],NULL,16);
+    uint32 *ptr_page_table = NULL;
+    get_page_table(ptr_page_directory,(void*)va,1,&ptr_page_table);
+    char op = arguments[2][0];
+    if(op == 'w'){
+    ptr_page_table[PTX(va)] = ptr_page_table[PTX(va)] | PERM_WRITEABLE;
+    }
+    else if(op == 'r'){
+    ptr_page_table[PTX(va)] = ptr_page_table[PTX(va)] & ~PERM_WRITEABLE;
+    }
+
+	return 0 ;
+}
+//share range command 
+/*Name: sr <va1> <va2> <size in KB>
+Arguments: 
+< va1>: the start virtual address of the range to be shared
+<va2>: the start virtual address that will see <virtual address 1> physical frame
+<size in KB>: size of the sharing range (in KB)
+Description: This command shares the physical frames of the range [<va1>, <va1> + size) with the range [<va2>, <va2> + size). You will need to use "get_page_table" with "create" flag equal 1 in order to create new page table(s) for the range [<va2>, <va2> + size) if there're no tables exist.
+	*/
+int command_share_range(int number_of_arguments, char **arguments)
+{
+	int val1 = strtol(arguments[1],NULL,16);
+	int val2 = strtol(arguments[2],NULL,16);
+	int limit = strtol(arguments[3],NULL,16);
+	uint32* page_table_1 = NULL;
+	uint32* page_table_2 = NULL;
+	for(int i =0 ; i<limit;i+=PAGE_SIZE){
+    get_page_table(ptr_page_directory,(void*)val1+i,0,&page_table_1);
+    get_page_table(ptr_page_directory,(void*)val2+i,1,&page_table_2);
+    page_table_2[PTX(val2+i)] = page_table_1[PTX(val1+i)];
+	}
 	return 0;
 }
