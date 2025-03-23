@@ -71,3 +71,23 @@ int command_share_range(int number_of_arguments, char **arguments)
 	}
 	return 0;
 }
+//Write Block Command
+/* Name: write_block <virtual address> <N>
+Arguments:
+<virtual address>: start virtual memory address to read from (hexadecimal)
+<N>: number of bytes to read from the given address (decimal)
+Description: writes the <N> bytes starting from < virtual address> and display them*/
+int write_block(int number_of_arguments,char **arguments){
+   int n = strtol(arguments[2],NULL,16);
+   char arr[n];
+   int physical_address = strtol(arguments[1],NULL,16);
+   int virtual_address = physical_address + KERNEL_BASE ;
+   char *ptr = (char *)virtual_address;
+   for (int i = 0 ;i<n;i++){
+	 cprintf("Element %d ",i);
+	 readline(":",&arr[i]);
+	*ptr = arr[i];
+	 ptr++;
+   }
+ return 0;
+}
