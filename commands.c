@@ -150,3 +150,26 @@ int command_cfp(int number_of_arguments, char **arguments)
 
 	return 0;
 }
+//Allocate page
+int command_ap(int number_of_arguments, char **arguments)
+{
+	//TODO: LAB5 Example: fill this function. corresponding command name is "ap"
+	//Comment the following line
+	//panic("Function is not implemented yet!");
+	struct Frame_Info *ptr_frame_info;
+	int va = strtol(arguments[1],NULL,16);
+	int ref = allocate_frame(&ptr_frame_info);
+    if(ref == E_NO_MEM){
+    	cprintf("No Memory \n");
+    }
+    else{
+    int map = map_frame(ptr_page_directory, ptr_frame_info, (void *) va,PERM_WRITEABLE);
+    if(map == E_NO_MEM){
+    	cprintf("No Memory \n");
+    }
+    else{
+    	cprintf("Allocated Successfully");
+    }
+    }
+	return 0 ;
+}
