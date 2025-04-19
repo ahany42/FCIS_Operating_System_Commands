@@ -116,3 +116,17 @@ int command_show_mapping(int number_of_arguments, char **arguments)
 
 	return 0 ;
 }
+//[1] Number of references on the given physical address
+int command_nr(int number_of_arguments, char **arguments)
+{
+	//TODO: LAB5 Example: fill this function. corresponding command name is "nr"
+	//Comment the following line
+	//panic("Function is not implemented yet!");
+	uint32 va = strtol(arguments[1],NULL,16);
+	uint32 * ptr_page_table = NULL;
+	get_page_table(ptr_page_directory,(void*)va,1,&ptr_page_table);
+	struct Frame_Info* frame = get_frame_info(ptr_page_directory, (void *)va, &ptr_page_table);
+	cprintf("Number Of References %d", frame->references);
+
+	return 0;
+}
