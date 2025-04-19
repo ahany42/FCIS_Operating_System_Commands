@@ -91,3 +91,28 @@ int write_block(int number_of_arguments,char **arguments){
    }
  return 0;
 }
+int command_show_mapping(int number_of_arguments, char **arguments)
+{
+	//TODO: LAB4 Hands-on: fill this function. corresponding command name is "sm"
+	//Comment the following line
+	//panic("Function is not implemented yet!");
+	uint32 va = strtol(arguments[1],NULL,16);
+	uint32 page_directory_index = 	PDX(va);
+	cprintf("Directory table index : %d\n",page_directory_index) ;
+	uint32 page_table_index = 	PTX(va);
+	cprintf("Page table index : %d\n",page_table_index);
+	uint32 * ptr_page_table = NULL;
+	get_page_table(ptr_page_directory,(void*)va,1,&ptr_page_table);
+	uint32 page_table_entry = ptr_page_table[PTX(va)];
+	int used = page_table_entry & PERM_WRITEABLE;
+	if(used){
+
+    cprintf("Not Used");
+	}
+	else{
+
+    cprintf("Used");
+	}
+
+	return 0 ;
+}
