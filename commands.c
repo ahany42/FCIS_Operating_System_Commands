@@ -173,3 +173,14 @@ int command_ap(int number_of_arguments, char **arguments)
     }
 	return 0 ;
 }
+//[3] Free Page: Un-map a single page at the given virtual address in the user space
+int command_fp(int number_of_arguments, char **arguments)
+{
+	//TODO: LAB5 Example: fill this function. corresponding command name is "fp"
+	//Comment the following line
+	//panic("Function is not implemented yet!");
+	int va = strtol(arguments[1],NULL,16);
+	unmap_frame(uint32 *ptr_page_directory, (void *)va);
+
+	return 0;
+}
