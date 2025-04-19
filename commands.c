@@ -130,3 +130,23 @@ int command_nr(int number_of_arguments, char **arguments)
 
 	return 0;
 }
+//[2] Count Free Pages in Range
+int command_cfp(int number_of_arguments, char **arguments)
+{
+	//TODO: LAB5 Hands-on: fill this function. corresponding command name is "cfp"
+	//Comment the following line
+	//panic("Function is not implemented yet!");
+	int va1 = strtol(arguments[1],NULL,16);
+	int va2 = strtol(arguments[2],NULL,16);
+	int freeCount = 0;
+	uint32 * ptr_page_table ;
+	for(int i = ROUNDOWN(i,PAGE_SIZE);i<=va2;i+=PAGE_SIZE){
+		struct frame_Info * frame = get_frame_info(ptr_page_directory,(void*)i,&ptr_page_table);
+		if(frame == NULL){
+			freeCount ++;
+		}
+	}
+	cprintf("Free Pages in Range %d\n",freeCount)
+
+	return 0;
+}
