@@ -184,3 +184,29 @@ int command_fp(int number_of_arguments, char **arguments)
 
 	return 0;
 }
+//[1] Allocate Shared Pages
+int command_asp(int number_of_arguments, char **arguments)
+{
+	//TODO: LAB5 Hands-on: fill this function. corresponding command name is "asp"
+	//Comment the following line
+	//panic("Function is not implemented yet!");
+
+    struct Frame_Info * frame;
+    int ret = allocate_frame(&frame);
+    if(ret == E_NO_MEM){
+    	cprintf("No Memory \n");
+    }
+    else{
+    	int va1 = strtol(arguments[1],NULL,16);
+    	int map = map_frame(ptr_page_directory, frame, (void *)va1, PERM_WRITEABLE);
+    	if(map == E_NO_MEM){
+    		cprintf("No Memory \n");
+    		free_frame(frame);
+    	}
+    	else{
+    	int va2 = strtol(arguments[2],NULL,16);
+    	int map2 = map_frame(ptr_page_directory, frame, (void *)va2, PERM_WRITEABLE);
+    	}
+    }
+	return 0;
+}
