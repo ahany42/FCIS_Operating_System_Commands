@@ -210,3 +210,24 @@ int command_asp(int number_of_arguments, char **arguments)
     }
 	return 0;
 }
+int command_show_mapping(int number_of_arguments, char **arguments)
+{
+	//TODO: LAB4 Hands-on: fill this function. corresponding command name is "sm"
+	//Comment the following line
+	uint32 va = strtol(arguments[1],NULL,16);
+	uint32 *ptr = (uint32 *) va;
+	uint32 *ptr_page_table = NULL;
+	get_page_table(ptr_page_directory,ptr,0,&ptr_page_table);
+	cprintf("Directory Index %d \n",PDX(va));
+	cprintf("Page Table Index %d \n",PTX(va));
+	uint32 frame_num = ptr_page_table[PTX(va)]>>12;
+	cprintf("Frame Number %d",frame_num);
+	uint32 frame_page_table = ptr_page_directory[PDX(va)]>>12;
+	if((ptr_page_table[PTX(va)] & PERM_USED) > 0){
+		cprintf("\n Used \n");
+	}
+	else{
+		cprintf("\n Not used \n");
+	}
+	return 0 ;
+}
