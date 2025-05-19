@@ -231,3 +231,18 @@ int command_show_mapping(int number_of_arguments, char **arguments)
 	}
 	return 0 ;
 }
+int command_cpna(int number_of_arguments,char** arguments){
+	uint32 va1 = strtol(arguments[1],NULL,16);
+	uint32 va2 = strtol(arguments[2],NULL,16);
+	uint32 *ptr_page_table = NULL;
+	uint32 *ptr = (uint32 *)va1;
+	int counter = 0;
+	for(uint32 i =ROWNDOWN(va1,PAGE_SIZE);i<va2;i+=PAGE_SIZE){
+	struct Frame_Info * frame_info = get_frame_info(ptr_page_directory,(void *) i,&ptr_page_table);
+	if(frame_info->references == 0){
+		counter +=1;
+	}
+	}
+	cprintf("Number of free pages in range is %d",counter);
+	return 0;
+}
